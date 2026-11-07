@@ -19,6 +19,8 @@ Create an account on the welcome screen to sign in. Demo accounts are stored in 
 
 ### Settings and demo roles
 
-The Settings screen lets users save company details, a logo and preferences in browser storage, and change their local password. The first account created in a browser is an Admin; later self-registered accounts default to IT Support. Admins can add, edit, deactivate and remove local users and assign Admin, HR Officer, Manager, Accountant or IT Support roles. The sidebar reflects each role's demo page access. Inactive accounts cannot sign in. Preferences are saved but are not yet applied throughout the interface.
+The Settings screen lets users save company details, a logo and preferences in browser storage, and change their local password. The first account created in a browser is an Admin; later self-registered accounts default to HR Officer (which can view the employee directory). Admins can add, edit, deactivate and remove local users and assign Admin, HR Officer, Manager, Accountant or IT Support roles. The sidebar reflects each role's demo page access. Inactive accounts cannot sign in. Preferences are saved but are not yet applied throughout the interface.
 
 These restrictions and password hashes are client-side demonstrations only. They do not secure the Node API or provide server-side authorization, two-factor authentication, session expiry, or login-attempt limits. Do not use this prototype with real employee information.
+
+Employee records are saved to `data/hrms.json` by the local Node API, not to a real database. Keep `npm run dev` running while using the app. A sign-up account is separate from an employee record; use **Employees → Add Employee** to add someone to the directory. New employees appear in the directory and at the top of Recent Employees. Browser-only roles do not provide real security.

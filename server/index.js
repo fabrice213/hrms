@@ -26,4 +26,5 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(405); res.end(JSON.stringify({ error: 'Method not allowed' }));
   } catch (err) { console.error(err); res.writeHead(500); res.end(JSON.stringify({error:'Unable to process request'})); }
 });
-server.listen(3001, '127.0.0.1', () => console.log('HRMS API listening on port 3001'));
+const port = Number(process.env.PORT || 3001);
+server.listen(port, '127.0.0.1', () => console.log(`HRMS API listening on port ${port}`));
