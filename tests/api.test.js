@@ -25,7 +25,7 @@ test('employee and leave data survive a server restart', async () => {
     await start();
     const url = `http://127.0.0.1:${port}/api/data`;
     assert.equal(await (await fetch(url)).json(), null);
-    const data = {employees: [['New Member','member@example.com','Developer','IT','Active']], leaves: []};
+    const data = {employees: [['New Member','member@example.com','Developer','IT','Active']], leaves: [], attendance: [{email:'member@example.com',name:'New Member',date:'2026-11-07',status:'Present',checkIn:'08:00',checkOut:'17:00'}], vacancies: [{title:'Developer',department:'IT',date:'2026-11-07',status:'Active'}]};
     const save = await fetch(url,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
     assert.equal(save.status, 200);
     assert.deepEqual(JSON.parse(await readFile(join(dir, 'data/hrms.json'), 'utf8')), data);

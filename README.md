@@ -17,10 +17,10 @@ Run `npm run build` to build the frontend. The API can also be started separatel
 
 Create an account on the welcome screen to sign in. Demo accounts are stored in the current browser's local storage; selecting “Remember me” also keeps the session there. This is a UI prototype, **not secure authentication**: it does not protect the API or provide real access control. Employee and leave data are saved separately by the local Node API.
 
-### Settings and demo roles
+### Local roles and employee access
 
-The Settings screen lets users save company details, a logo and preferences in browser storage, and change their local password. The first account created in a browser is an Admin; later self-registered accounts default to HR Officer (which can view the employee directory). Admins can add, edit, deactivate and remove local users and assign Admin, HR Officer, Manager, Accountant or IT Support roles. The sidebar reflects each role's demo page access. Inactive accounts cannot sign in. Preferences are saved but are not yet applied throughout the interface.
+The first account created in a browser is an Admin; later accounts are Users. Existing non-admin demo roles are treated as Users. Administrators can add employees, record attendance, manage leave requests and vacancies, inspect departments and positions derived from employees, and download CSV reports. Payroll is not implemented.
 
-These restrictions and password hashes are client-side demonstrations only. They do not secure the Node API or provide server-side authorization, two-factor authentication, session expiry, or login-attempt limits. Do not use this prototype with real employee information.
+Users see only their own position, department and attendance report in the interface. An administrator must add their employee record using the **same email address** as their sign-in account. Accounts are browser-local; employee records, attendance, leave and vacancies are saved by the Node API in `data/hrms.json`. Keep `npm run dev` running. Settings and account management are browser-local.
 
-Employee records are saved to `data/hrms.json` by the local Node API, not to a real database. Keep `npm run dev` running while using the app. A sign-up account is separate from an employee record; use **Employees → Add Employee** to add someone to the directory. New employees appear in the directory and at the top of Recent Employees. Browser-only roles do not provide real security.
+**Important:** These role restrictions are only in the interface. The Node API has no authentication or server-side authorization and exposes all records to anyone with access to it. They are not real access control. Two-factor authentication, secure session management and login-attempt limits are not implemented. Do not use this demo with real employee information or on an untrusted network.
