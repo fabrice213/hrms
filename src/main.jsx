@@ -5,6 +5,8 @@ import './style.css';
 import SettingsPage from './SettingsPage';
 import UserPortal from './UserPortal';
 import { downloadCsv } from './csv';
+import { initializeTheme } from './theme';
+initializeTheme();
 
 const initialEmployees = [
  ['Jean Uwimana','jean@example.com','Software Developer','IT','Active'], ['Aline Niyonkuru','aline@example.com','HR Officer','HR','Active'], ['Shema Emmanuel','shema@example.com','Accountant','Finance','Active'], ['Mukamana Claudine','claudine@example.com','Frontend Developer','IT','Active'], ['Niyigena Patrick','patrick@example.com','Manager','Management','Active'], ['Uwimana Alice','alice@example.com','Sales Executive','Sales','Active'], ['Kayiranga Samuel','samuel@example.com','Marketing Officer','Marketing','Active'], ['Umutoni Diane','diane@example.com','Support Staff','Support','Active']

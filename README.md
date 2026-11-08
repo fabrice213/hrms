@@ -24,3 +24,5 @@ The first account created in a browser is an Admin; later accounts are Users. Ex
 Users see only their own position, department and attendance report in the interface. An administrator must add their employee record using the **same email address** as their sign-in account. Accounts are browser-local; employee records, attendance, leave and vacancies are saved by the Node API in `data/hrms.json`. Keep `npm run dev` running. Settings and account management are browser-local.
 
 **Important:** These role restrictions are only in the interface. The Node API has no authentication or server-side authorization and exposes all records to anyone with access to it. They are not real access control. Two-factor authentication, secure session management and login-attempt limits are not implemented. Do not use this demo with real employee information or on an untrusted network.
+
+The theme selector in Settings switches between Light (white) and Dark immediately. The choice is saved in this browser and restored when the app is reopened. Other appearance preferences remain demo settings and are not applied across the interface.
