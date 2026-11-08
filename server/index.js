@@ -16,7 +16,7 @@ const server = http.createServer(async (req, res) => {
       let body = '';
       for await (const chunk of req) { body += chunk; if (body.length > 1000000) { res.writeHead(413); return res.end(JSON.stringify({error:'Request too large'})); } }
       const data = JSON.parse(body);
-      if (!Array.isArray(data.employees) || !Array.isArray(data.leaves)) { res.writeHead(400); return res.end(JSON.stringify({error:'Invalid data'})); }
+      if (!data || !Array.isArray(data.employees) || !Array.isArray(data.leaves) || ['attendance', 'vacancies', 'payroll'].some(key => data[key] !== undefined && !Array.isArray(data[key]))) { res.writeHead(400); return res.end(JSON.stringify({error:'Invalid data'})); }
       await mkdir(dirname(file), { recursive: true });
       const temporary = `${file}.${Date.now()}.tmp`;
       await writeFile(temporary, JSON.stringify(data, null, 2));

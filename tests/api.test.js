@@ -25,7 +25,7 @@ test('employee and leave data survive a server restart', async () => {
     await start();
     const url = `http://127.0.0.1:${port}/api/data`;
     assert.equal(await (await fetch(url)).json(), null);
-    const data = {employees: [['New Member','member@example.com','Developer','IT','Active']], leaves: [], attendance: [{email:'member@example.com',name:'New Member',date:'2026-11-07',status:'Present',checkIn:'08:00',checkOut:'17:00'}], vacancies: [{title:'Developer',department:'IT',date:'2026-11-07',status:'Active'}]};
+    const data = {employees: [['New Member','member@example.com','Developer','IT','Active']], leaves: [], attendance: [{email:'member@example.com',name:'New Member',date:'2026-11-07',status:'Present',checkIn:'08:00',checkOut:'17:00'}], vacancies: [{title:'Developer',department:'IT',date:'2026-11-07',status:'Active'}], payroll: [{id:'test-payroll',email:'member@example.com',name:'New Member',period:'2026-11',base:500000,allowances:50000,deductions:75000,gross:550000,net:475000,status:'Draft'}]};
     const save = await fetch(url,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
     assert.equal(save.status, 200);
     assert.deepEqual(JSON.parse(await readFile(join(dir, 'data/hrms.json'), 'utf8')), data);
@@ -34,6 +34,8 @@ test('employee and leave data survive a server restart', async () => {
     assert.deepEqual(await (await fetch(url)).json(), data);
     const invalid = await fetch(url,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({employees:'bad'})});
     assert.equal(invalid.status,400);
+    const badPayroll = await fetch(url,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({...data,payroll:'bad'})});
+    assert.equal(badPayroll.status,400);
     assert.deepEqual(await (await fetch(url)).json(), data);
   } finally { if(server) await stop(); await rm(dir,{recursive:true,force:true}); }
 });

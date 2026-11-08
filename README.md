@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal. The development server proxies `/api` requests to the Node API on port 3001. Employee and leave-request changes are stored in `data/hrms.json` on the server. Other screens currently use demonstration data and actions.
+Open the Vite URL printed in the terminal. The development server proxies `/api` requests to the Node API on port 3001. Employee and leave-request changes are stored in `data/hrms.json` on the server. Attendance, vacancies and payroll records are stored in the same local file. Some dashboard content remains demonstration data.
 
 Run `npm run build` to build the frontend. The API can also be started separately with `npm run api`.
 
@@ -19,10 +19,16 @@ Create an account on the welcome screen to sign in. Demo accounts are stored in 
 
 ### Local roles and employee access
 
-The first account created in a browser is an Admin; later accounts are Users. Existing non-admin demo roles are treated as Users. Administrators can add employees, record attendance, manage leave requests and vacancies, inspect departments and positions derived from employees, and download CSV reports. Payroll is not implemented.
+The first account created in a browser is an Admin; later accounts are Users. Existing non-admin demo roles are treated as Users. Administrators can add employees, record attendance, manage leave requests and vacancies, inspect departments and positions derived from employees, and download CSV reports. Administrators can also prepare payroll drafts and record payments already made externally.
 
 Users see only their own position, department and attendance report in the interface. An administrator must add their employee record using the **same email address** as their sign-in account. Accounts are browser-local; employee records, attendance, leave and vacancies are saved by the Node API in `data/hrms.json`. Keep `npm run dev` running. Settings and account management are browser-local.
 
 **Important:** These role restrictions are only in the interface. The Node API has no authentication or server-side authorization and exposes all records to anyone with access to it. They are not real access control. Two-factor authentication, secure session management and login-attempt limits are not implemented. Do not use this demo with real employee information or on an untrusted network.
 
 The theme selector in Settings switches between Light (white) and Dark immediately. The choice is saved in this browser and restored when the app is reopened. Other appearance preferences remain demo settings and are not applied across the interface.
+
+### Payroll
+
+In Payroll, add a draft for an employee and pay period, entering base salary, allowances and deductions as whole RWF amounts. Net pay is gross pay minus deductions. Review amounts and calculate any taxes and statutory contributions separately; the app does not calculate them. Export records as CSV if needed.
+
+Pay the worker using your bank, mobile-money provider or another external method. Only after that payment succeeds, choose **Record payment**, enter the payment date and reference, and confirm. This changes the local record to paid; it **does not initiate, verify or reverse a transfer**. Paid records cannot be edited or deleted in the UI. The payroll data is saved in the local JSON file and there is no secure access control or concurrency protection. This prototype is not suitable for real sensitive payroll or multiple administrators without a secure backend, audit trail and verified payment integration.
