@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {weeklyAttendance} from './attendanceOverview';
+import {weeklyAttendance} from './attendanceStats.js';
 
 export default function AttendanceOverview({records,loaded,error}) {
  const [today,setToday]=useState(()=>new Date());

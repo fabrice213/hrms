@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {weeklyAttendance, localDateKey} from '../src/attendanceOverview.js';
+import {weeklyAttendance, localDateKey} from '../src/attendanceStats.js';
 
 test('groups saved records by date and status for the local Monday-to-Sunday week',()=>{
  const now=new Date(2026,10,5,10);

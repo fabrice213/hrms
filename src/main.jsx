@@ -6,8 +6,8 @@ import SettingsPage from './SettingsPage';
 import UserPortal from './UserPortal';
 import PayrollPage from './PayrollPage';
 import ReportsPage from './ReportsPage';
-import AttendanceOverview from './AttendanceOverview';
-import { localDateKey } from './attendanceOverview';
+import AttendanceOverview from './AttendanceOverview.jsx';
+import { localDateKey } from './attendanceStats.js';
 import { initializeTheme } from './theme';
 initializeTheme();
 
