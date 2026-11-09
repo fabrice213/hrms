@@ -5,6 +5,7 @@ export default function UserPortal({user,onSignOut}){
  const [page,setPage]=useState('My Position'),[data,setData]=useState(null),[error,setError]=useState(''),[menu,setMenu]=useState(false);
  const load=()=>{setError('');fetch('/api/data').then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>setData(d||{employees:[],leaves:[],attendance:[]})).catch(()=>setError('Unable to load your details. Start the local server and try again.'))};
  useEffect(load,[]);
+ useEffect(()=>{document.title=`${page} | Fabrice HRMS`},[page]);
  const employee=data?.employees?.find(e=>e[1]?.toLowerCase()===user.email.toLowerCase());
  const records=(data?.attendance||[]).filter(a=>a.email?.toLowerCase()===user.email.toLowerCase());
  const links=[['My Position',BriefcaseBusiness],['My Department',Building2],['My Report',ChartColumn]];

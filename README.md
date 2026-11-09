@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal. The development server proxies `/api` requests to the Node API on port 3001. Employee and leave-request changes are stored in `data/hrms.json` on the server. Attendance, vacancies and payroll records are stored in the same local file. Some dashboard content remains demonstration data.
+Open the Vite URL printed in the terminal for the public landing page, then choose **Open the HRMS** to access the app (`/app.html`). The development server proxies `/api` requests to the Node API on port 3001. Employee and leave-request changes are stored in `data/hrms.json` on the server. Attendance, vacancies and payroll records are stored in the same local file. Some dashboard content remains demonstration data.
 
 Run `npm run build` to build the frontend. The API can also be started separately with `npm run api`.
 
@@ -32,3 +32,11 @@ The theme selector in Settings switches between Light (white) and Dark immediate
 In Payroll, add a draft for an employee and pay period, entering base salary, allowances and deductions as whole RWF amounts. Net pay is gross pay minus deductions. Review amounts and calculate any taxes and statutory contributions separately; the app does not calculate them. Export records as CSV if needed.
 
 Pay the worker using your bank, mobile-money provider or another external method. Only after that payment succeeds, choose **Record payment**, enter the payment date and reference, and confirm. This changes the local record to paid; it **does not initiate, verify or reverse a transfer**. Paid records cannot be edited or deleted in the UI. The payroll data is saved in the local JSON file and there is no secure access control or concurrency protection. This prototype is not suitable for real sensitive payroll or multiple administrators without a secure backend, audit trail and verified payment integration.
+
+### Dashboard and search metadata
+
+The dashboard attendance overview groups saved Present, Late and Absent records by day for the current Monday–Sunday week, using the browser's local calendar. Open “View daily counts” for the exact numbers. Days with no recorded attendance are shown as zero; they are not assumed absent.
+
+The public landing page at `/` is rendered as HTML without JavaScript, with descriptive content, feature explanations, FAQs, semantic headings, metadata, a social image and SoftwareApplication structured data. The sign-in app at `/app.html` requests `noindex, nofollow`; dashboard and account titles update in the browser. Robots rules exclude `/api/`, but robots and noindex are not security controls.
+
+For a production build, set the real public HTTPS origin, for example `VITE_SITE_URL=https://your-domain.example npm run build`. The build then adds the canonical URL, absolute social image URL, sitemap and sitemap reference in robots.txt. Without this setting, no domain is guessed and no sitemap is generated. Serve both `dist/index.html` and `dist/app.html`, the assets, and the API on the same origin. Submit the sitemap through your search-engine webmaster tools after deployment. Search rankings and indexing cannot be guaranteed. Protect private data on the server before any deployment.
