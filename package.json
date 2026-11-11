@@ -10,11 +10,18 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.6.2",
+    "express": "^4.21.2",
     "lucide-react": "latest",
     "postcss": "^8.5.32",
     "react": "latest",
     "react-dom": "latest",
     "tailwindcss": "^3.4.17",
     "vite": "^6.1.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  },
+  "engines": {
+    "node": ">=22.5.0"
   }
 }

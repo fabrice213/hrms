@@ -1,42 +1,41 @@
 # Fabrice HRMS
 
-A responsive HRMS interface built with React, Tailwind CSS, Vite and a Node.js API.
+A local HRMS prototype built with React, Vite, Express and a local SQLite database. Its role-based interface is inspired by the supplied HR dashboard references.
 
-## Run locally
+## Start the local system
+
+Install **Node.js 22.5 or newer** (Node 22 LTS is recommended; `node:sqlite` may print an experimental warning), then run:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal for the public landing page, then choose **Open the HRMS** to access the app (`/app.html`). The development server proxies `/api` requests to the Node API on port 3001. Employee and leave-request changes are stored in `data/hrms.json` on the server. Attendance, vacancies and payroll records are stored in the same local file. Some dashboard content remains demonstration data.
+Open the Vite **Local** URL printed in the terminal and choose **Open the HRMS**. The Express API runs on `127.0.0.1:3001`; Vite proxies `/api` on the same origin. Keep both running. The first visit to the app creates the initial system administrator; after that, only an administrator can create accounts under **Users & Roles**. Users sign in with their assigned email and password. Administrators must link each normal employee account to an employee record. Department managers must have an assigned department.
 
-Run `npm run build` to build the frontend. The API can also be started separately with `npm run api`.
+The SQLite database is stored locally at `data/hrms.sqlite` and is ignored by Git. Back up the database while the server is stopped. **Existing browser-only demo accounts are not migrated**; recreate them using the administrator account. The previous `data/hrms.json` file is not modified or deleted, but is not automatically imported into the new database. Keep a backup of it; do not delete it expecting records to have been migrated. Do not commit database files or real employee data.
 
-## Local sign-in demo
+## Roles and access
 
-Create an account on the welcome screen to sign in. Demo accounts are stored in the current browser's local storage; selecting “Remember me” also keeps the session there. This is a UI prototype, **not secure authentication**: it does not protect the API or provide real access control. Employee and leave data are saved separately by the local Node API.
+The server stores users, roles, permissions, user-role and role-permission relationships in SQLite. It checks the signed-in user's permissions on every API request; frontend menus are not the security boundary. The following roles are seeded:
 
-### Local roles and employee access
+- **System Administrator:** manages employees, attendance, leave, payroll, recruitment, departments, positions, company settings, user roles and audit logs. Payroll access is enabled by default, as requested.
+- **HR Manager:** manages employees, attendance, leave decisions, departments, positions, recruitment and HR reports. No payroll or user administration.
+- **Payroll Officer:** views limited employee details and manages payroll and payroll reports. No employee editing or settings.
+- **Recruitment Officer:** manages vacancies and candidate status/interview dates, and sees recruitment reports. No employee or payroll access.
+- **Department Manager:** sees employees, attendance and leave only in the assigned department; can recommend leave decisions, and see team totals and vacancy/position listings. Cannot approve leave or view payroll.
+- **Normal Employee:** sees their linked profile, own attendance, leave, paid payroll records and personal summary; can update their phone and submit leave. They cannot view other employees' records.
 
-The first account created in a browser is an Admin; later accounts are Users. Existing non-admin demo roles are treated as Users. Administrators can add employees, record attendance, manage leave requests and vacancies, inspect departments and positions derived from employees, and download CSV reports. Administrators can also prepare payroll drafts and record payments already made externally.
+Account passwords are hashed with scrypt, and sessions use an HttpOnly, SameSite cookie. An administrator can change another user's role, department, linked employee and active status; changing access invalidates that user's sessions. Users can change their own password in **Account**. Audit entries are available to the administrator. The app uses server-side checks and scoped queries, but remains a **local prototype**, not a security-certified production system. It lacks production-ready deployment, account recovery, durable rate limiting, MFA, comprehensive audit/backup tooling and an external security review. Keep it off untrusted networks and do not use it with real sensitive information until those controls are added. For HTTPS deployments set `HRMS_SECURE_COOKIE=true` and configure a trusted reverse proxy; the development server is not a production deployment.
 
-Users see only their own position, department and attendance report in the interface. An administrator must add their employee record using the **same email address** as their sign-in account. Accounts are browser-local; employee records, attendance, leave and vacancies are saved by the Node API in `data/hrms.json`. Keep `npm run dev` running. Settings and account management are browser-local.
+## Payroll and reports
 
-**Important:** These role restrictions are only in the interface. The Node API has no authentication or server-side authorization and exposes all records to anyone with access to it. They are not real access control. Two-factor authentication, secure session management and login-attempt limits are not implemented. Do not use this demo with real employee information or on an untrusted network.
+Payroll records use whole RWF. Salary, allowances and deductions are entered manually; statutory tax and contributions are not calculated. Marking a payroll record paid only records a payment **already made externally**; the system does not send, verify or reverse a bank or mobile-money transfer. Paid records can be viewed by their linked employee. Reports provide scoped summaries, readable records and CSV exports; they are not full statutory or financial reports.
 
-The theme selector in Settings switches between Light (white) and Dark immediately. The choice is saved in this browser and restored when the app is reopened. Other appearance preferences remain demo settings and are not applied across the interface.
+## Scope still to build
 
-### Payroll
+The screenshots and requested scenario describe a larger system than this prototype. Candidate applications are entered by staff; public applications, CV uploads and interview invitations are not implemented. Contracts, performance, disciplinary cases, tasks, announcements, real notifications, automatic payslip PDFs, advanced attendance analytics, granular permission editing, IP configuration, automated backups and account recovery are also not implemented. Department and position lists can be created, but full edit/delete workflows are not yet available. Legacy data migration requires a separate reviewed import. Role and department scoping should be independently security-tested before real use.
 
-In Payroll, add a draft for an employee and pay period, entering base salary, allowances and deductions as whole RWF amounts. Net pay is gross pay minus deductions. Review amounts and calculate any taxes and statutory contributions separately; the app does not calculate them. Export records as CSV if needed.
+## SEO and builds
 
-Pay the worker using your bank, mobile-money provider or another external method. Only after that payment succeeds, choose **Record payment**, enter the payment date and reference, and confirm. This changes the local record to paid; it **does not initiate, verify or reverse a transfer**. Paid records cannot be edited or deleted in the UI. The payroll data is saved in the local JSON file and there is no secure access control or concurrency protection. This prototype is not suitable for real sensitive payroll or multiple administrators without a secure backend, audit trail and verified payment integration.
-
-### Dashboard and search metadata
-
-The dashboard attendance overview groups saved Present, Late and Absent records by day for the current Monday–Sunday week, using the browser's local calendar. Open “View daily counts” for the exact numbers. Days with no recorded attendance are shown as zero; they are not assumed absent.
-
-The public landing page at `/` is rendered as HTML without JavaScript, with descriptive content, feature explanations, FAQs, semantic headings, metadata, a social image and SoftwareApplication structured data. The sign-in app at `/app.html` requests `noindex, nofollow`; dashboard and account titles update in the browser. Robots rules exclude `/api/`, but robots and noindex are not security controls.
-
-For a production build, set the real public HTTPS origin, for example `VITE_SITE_URL=https://your-domain.example npm run build`. The build then adds the canonical URL, absolute social image URL, sitemap and sitemap reference in robots.txt. Without this setting, no domain is guessed and no sitemap is generated. Serve both `dist/index.html` and `dist/app.html`, the assets, and the API on the same origin. Submit the sitemap through your search-engine webmaster tools after deployment. Search rankings and indexing cannot be guaranteed. Protect private data on the server before any deployment.
+The public landing page is static HTML at `/`; the private application is `/app.html` and requests no indexing. Run `npm run build` to build both. Set `VITE_SITE_URL` to your real public HTTPS origin at build time to generate the canonical URL, social metadata and sitemap. Never treat `robots.txt` or `noindex` as access control. Run automated checks with `node --test tests/*.test.js`.
